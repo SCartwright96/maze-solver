@@ -1,11 +1,13 @@
 from tkinter import Tk, BOTH, Canvas
+import random
+from colors import BACKGROUND_COLOR, FAIL_COLOR, PASS_COLOR, WALL_COLOR
 
 class Window():
     def __init__(self, width, height):
         self.root_widget = Tk()
         self.root_widget.title = "Maze Solver"
         self.root_widget.protocol("WM_DELETE_WINDOW", self.close)
-        self.canvas = Canvas(self.root_widget, bg="white", height=height, width=width)
+        self.canvas = Canvas(self.root_widget, bg=BACKGROUND_COLOR, height=height, width=width)
         self.canvas.pack(fill=BOTH, expand=1)
         self.running = False
 
@@ -54,6 +56,7 @@ class Cell:
         self._y1 = None
         self._y2 = None
         self._win = win
+        self.visited = False
 
     def draw(self, x1, y1, x2, y2):
         self._x1 = min(x1,x2)
@@ -62,13 +65,13 @@ class Cell:
         self._y2 = max(y1,y2)
 
         line = Line(Point(self._x1, self._y1), Point(self._x1, self._y2))
-        self._win.draw_line(line, "black" if self.has_left_wall else "white")
+        self._win.draw_line(line, WALL_COLOR if self.has_left_wall else BACKGROUND_COLOR)
         line = Line(Point(self._x1, self._y1), Point(self._x2, self._y1))
-        self._win.draw_line(line, "black" if self.has_top_wall else "white")
+        self._win.draw_line(line, WALL_COLOR if self.has_top_wall else BACKGROUND_COLOR)
         line = Line(Point(self._x2, self._y1), Point(self._x2, self._y2))
-        self._win.draw_line(line, "black" if self.has_right_wall else "white")
+        self._win.draw_line(line, WALL_COLOR if self.has_right_wall else BACKGROUND_COLOR)
         line = Line(Point(self._x1, self._y2), Point(self._x2, self._y2))
-        self._win.draw_line(line, "black" if self.has_bottom_wall else "white")
+        self._win.draw_line(line, WALL_COLOR if self.has_bottom_wall else BACKGROUND_COLOR)
 
         '''if self.has_left_wall:
             line = Line(Point(self._x1, self._y1), Point(self._x1, self._y2))
@@ -83,11 +86,11 @@ class Cell:
             line = Line(Point(self._x1, self._y2), Point(self._x2, self._y2))
             self._win.draw_line(line)'''
 
-    def draw_move(self, to_cell, undo = False):
+    def draw_move(self, to_cell, undo = False, undo_color = FAIL_COLOR):
         if undo:
-            line_color = "gray"
+            line_color = undo_color
         else:
-            line_color = "red"
+            line_color = PASS_COLOR
         
         center1 = Point((self._x1 + self._x2) / 2, (self._y1 + self._y2) /2)
         center2 = Point((to_cell._x1 + to_cell._x2) / 2, (to_cell._y1 + to_cell._y2) /2)

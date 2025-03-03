@@ -1,0 +1,1 @@
+/bin/python3 "/home/sahar/gitProjects/maze solver/src/main.py"
